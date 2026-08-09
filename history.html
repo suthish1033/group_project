@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Resume History - ResumeAI</title>
+
+<link rel="stylesheet"
+href="dashboard.css">
+
+<style>
+
+.history-box {
+    background: white;
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 15px rgba(0,0,0,.06);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+th {
+    background: #f8fafc;
+}
+
+.delete-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 7px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.clear-btn {
+    margin-top: 20px;
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 11px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.empty {
+    text-align: center;
+    color: #6b7280;
+    padding: 40px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<script>
+
+if (
+    localStorage.getItem("isLoggedIn") !== "true"
+) {
+
+    window.location.href =
+        "../login-register/index.html";
+
+}
+
+</script>
+
+
+<header class="navbar">
+
+    <div class="logo">
+        ResumeAI
+    </div>
+
+    <div class="profile">
+
+        <span>
+            Resume History
+        </span>
+
+        <button
+            class="logout"
+            onclick="logout()">
+
+            Logout
+
+        </button>
+
+    </div>
+
+</header>
+
+
+<div class="layout">
+
+
+<aside class="sidebar">
+
+    <h3>MENU</h3>
+
+    <a href="dashboard.html">
+        🏠 Dashboard
+    </a>
+
+    <a href="art.html">
+        🎨 ART Port
+    </a>
+
+    <a href="history.html"
+       class="active">
+        🕘 Resume History
+    </a>
+
+</aside>
+
+
+<main class="main">
+
+    <div class="heading">
+
+        <h1>
+            Resume History
+        </h1>
+
+        <p>
+            View your uploaded resumes.
+        </p>
+
+    </div>
+
+
+    <div class="history-box">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        #
+                    </th>
+
+                    <th>
+                        Resume
+                    </th>
+
+                    <th>
+                        Size
+                    </th>
+
+                    <th>
+                        Uploaded
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="historyBody">
+            </tbody>
+
+        </table>
+
+
+        <button
+            class="clear-btn"
+            onclick="clearHistory()">
+
+            Clear History
+
+        </button>
+
+    </div>
+
+</main>
+
+</div>
+
+
+<script>
+
+
+function logout() {
+
+    localStorage.removeItem("isLoggedIn");
+
+    window.location.href =
+        "../login-register/index.html";
+
+}
+
+
+/* LOAD HISTORY */
+
+function loadHistory() {
+
+    const history =
+        JSON.parse(
+            localStorage.getItem(
+                "resumeHistory"
+            )
+        ) || [];
+
+
+    const body =
+        document.getElementById(
+            "historyBody"
+        );
+
+
+    body.innerHTML = "";
+
+
+    if (history.length === 0) {
+
+        body.innerHTML = `
+            <tr>
+                <td colspan="5"
+                    class="empty">
+                    No resumes uploaded yet.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    history.forEach(
+        (item, index) => {
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${index + 1}
+                </td>
+
+                <td>
+                    📄 ${item.name}
+                </td>
+
+                <td>
+                    ${item.size}
+                </td>
+
+                <td>
+                    ${item.time}
+                </td>
+
+                <td>
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteResume(${item.id})">
+
+                        Delete
+
+                    </button>
+
+                </td>
+
+            `;
+
+
+            body.appendChild(row);
+
+        }
+    );
+
+}
+
+
+/* DELETE */
+
+function deleteResume(id) {
+
+    let history =
+        JSON.parse(
+            localStorage.getItem(
+                "resumeHistory"
+            )
+        ) || [];
+
+
+    history =
+        history.filter(
+            item => item.id !== id
+        );
+
+
+    localStorage.setItem(
+        "resumeHistory",
+        JSON.stringify(history)
+    );
+
+
+    loadHistory();
+
+}
+
+
+/* CLEAR */
+
+function clearHistory() {
+
+    if (
+        confirm(
+            "Delete all resume history?"
+        )
+    ) {
+
+        localStorage.removeItem(
+            "resumeHistory"
+        );
+
+        loadHistory();
+
+    }
+
+}
+
+
+loadHistory();
+
+</script>
+
+</body>
+
+</html>

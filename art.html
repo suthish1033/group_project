@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Resume Upload - ResumeAI</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2ff,
+                    #f8fafc
+                );
+
+            min-height: 100vh;
+
+            padding: 30px;
+
+            color: #1e293b;
+        }
+
+        .container {
+
+            max-width: 900px;
+
+            margin: auto;
+        }
+
+        /* TOP BAR */
+
+        .topbar {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .topbar h1 {
+
+            color: #1e3a8a;
+
+            font-size: 30px;
+        }
+
+        .back-btn {
+
+            text-decoration: none;
+
+            background: #1d4ed8;
+
+            color: white;
+
+            padding: 10px 18px;
+
+            border-radius: 8px;
+        }
+
+        .back-btn:hover {
+
+            background: #1e40af;
+        }
+
+        /* CARD */
+
+        .card {
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 10px 30px
+                rgba(0,0,0,0.08);
+
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+
+            margin-bottom: 10px;
+
+            color: #1e293b;
+        }
+
+        .card p {
+
+            color: #64748b;
+
+            margin-bottom: 25px;
+        }
+
+        /* UPLOAD */
+
+        .upload-box {
+
+            border: 2px dashed #2563eb;
+
+            padding: 50px 20px;
+
+            text-align: center;
+
+            border-radius: 12px;
+
+            background: #eff6ff;
+
+            cursor: pointer;
+
+            display: block;
+
+            transition: 0.2s;
+        }
+
+        .upload-box:hover {
+
+            background: #dbeafe;
+        }
+
+        .upload-box input {
+
+            display: none;
+        }
+
+        .upload-icon {
+
+            font-size: 50px;
+
+            margin-bottom: 12px;
+        }
+
+        .upload-title {
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            color: #1e40af;
+        }
+
+        .upload-info {
+
+            margin-top: 8px;
+
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+        .file-name {
+
+            margin-top: 15px;
+
+            font-weight: bold;
+
+            color: #2563eb;
+
+            word-break: break-word;
+        }
+
+        /* JOB ROLE */
+
+        .job-section {
+
+            margin-top: 25px;
+        }
+
+        .job-section label {
+
+            font-weight: bold;
+
+            display: block;
+
+            margin-bottom: 8px;
+        }
+
+        select {
+
+            width: 100%;
+
+            padding: 14px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 8px;
+
+            font-size: 16px;
+
+            background: white;
+
+            outline: none;
+        }
+
+        select:focus {
+
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(37,99,235,0.15);
+        }
+
+        /* BUTTON */
+
+        .analyze-btn {
+
+            width: 100%;
+
+            margin-top: 25px;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .analyze-btn:hover {
+
+            background: #1d4ed8;
+        }
+
+        .analyze-btn:disabled {
+
+            background: #94a3b8;
+
+            cursor: not-allowed;
+        }
+
+        /* MESSAGE */
+
+        #message {
+
+            margin-top: 15px;
+
+            text-align: center;
+
+            font-weight: bold;
+
+            min-height: 22px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 700px) {
+
+            body {
+
+                padding: 15px;
+            }
+
+            .topbar {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+            .topbar h1 {
+
+                font-size: 24px;
+            }
+
+            .card {
+
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- TOP BAR -->
+
+    <div class="topbar">
+
+        <h1>
+            📄 Resume Upload
+        </h1>
+
+        <a
+            href="dashboard.html"
+            class="back-btn"
+        >
+            ← Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- MAIN CARD -->
+
+    <div class="card">
+
+        <h2>
+            Upload Your Resume
+        </h2>
+
+        <p>
+            Upload your resume and select
+            the job role you are applying for.
+        </p>
+
+
+        <!-- RESUME UPLOAD -->
+
+        <label
+            class="upload-box"
+            for="resume"
+        >
+
+            <div class="upload-icon">
+                📄
+            </div>
+
+            <div class="upload-title">
+                Click to Upload Resume
+            </div>
+
+            <div class="upload-info">
+                Supported formats: PDF and DOCX
+            </div>
+
+            <input
+                type="file"
+                id="resume"
+                accept=".pdf,.docx"
+                onchange="showFile()"
+            >
+
+            <div
+                class="file-name"
+                id="fileName"
+            ></div>
+
+        </label>
+
+
+        <!-- JOB ROLE -->
+
+        <div class="job-section">
+
+            <label for="jobRole">
+                💼 Select Job Role
+            </label>
+
+            <select id="jobRole">
+
+                <option value="">
+                    -- Select Job Role --
+                </option>
+
+                <option value="Python Developer">
+                    Python Developer
+                </option>
+
+                <option value="Data Scientist">
+                    Data Scientist
+                </option>
+
+                <option value="Data Analyst">
+                    Data Analyst
+                </option>
+
+                <option value="AI Engineer">
+                    AI Engineer
+                </option>
+
+                <option value="Machine Learning Engineer">
+                    Machine Learning Engineer
+                </option>
+
+                <option value="Deep Learning Engineer">
+                    Deep Learning Engineer
+                </option>
+
+                <option value="Data Engineer">
+                    Data Engineer
+                </option>
+
+                <option value="Web Developer">
+                    Web Developer
+                </option>
+
+                <option value="Frontend Developer">
+                    Frontend Developer
+                </option>
+
+                <option value="Backend Developer">
+                    Backend Developer
+                </option>
+
+                <option value="Full Stack Developer">
+                    Full Stack Developer
+                </option>
+
+                <option value="Java Developer">
+                    Java Developer
+                </option>
+
+                <option value="Software Developer">
+                    Software Developer
+                </option>
+
+                <option value="Software Engineer">
+                    Software Engineer
+                </option>
+
+                <option value="Cloud Engineer">
+                    Cloud Engineer
+                </option>
+
+                <option value="DevOps Engineer">
+                    DevOps Engineer
+                </option>
+
+                <option value="Cybersecurity Analyst">
+                    Cybersecurity Analyst
+                </option>
+
+                <option value="NLP Engineer">
+                    NLP Engineer
+                </option>
+
+                <option value="Computer Vision Engineer">
+                    Computer Vision Engineer
+                </option>
+
+                <option value="Database Administrator">
+                    Database Administrator
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- ANALYZE -->
+
+        <button
+            class="analyze-btn"
+            id="analyzeBtn"
+            onclick="analyzeResume()"
+        >
+            🔍 Analyze Resume
+        </button>
+
+
+        <div id="message"></div>
+
+    </div>
+
+</div>
+
+
+
+<<script>
+
+    const API = "http://127.0.0.1:5000";
+
+
+    function showFile() {
+
+        const file =
+            document.getElementById("resume").files[0];
+
+        const fileName =
+            document.getElementById("fileName");
+
+        if (file) {
+
+            fileName.textContent =
+                "Selected: " + file.name;
+
+        } else {
+
+            fileName.textContent = "";
+
+        }
+    }
+
+
+    async function analyzeResume() {
+
+        const fileInput =
+            document.getElementById("resume");
+
+        const jobRole =
+            document.getElementById("jobRole").value;
+
+        const message =
+            document.getElementById("message");
+
+        const button =
+            document.getElementById("analyzeBtn");
+
+
+        // Resume check
+
+        if (!fileInput.files.length) {
+
+            message.textContent =
+                "Please select your resume.";
+
+            message.style.color = "#dc2626";
+
+            return;
+        }
+
+
+        // Job role check
+
+        if (!jobRole) {
+
+            message.textContent =
+                "Please select a job role.";
+
+            message.style.color = "#dc2626";
+
+            return;
+        }
+
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            "resume",
+            fileInput.files[0]
+        );
+
+
+        formData.append(
+            "job_role",
+            jobRole
+        );
+
+
+        button.disabled = true;
+
+        button.textContent =
+            "⏳ Analyzing...";
+
+
+        message.textContent =
+            "Please wait, analyzing your resume...";
+
+        message.style.color = "#2563eb";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    API + "/api/ats/analyze",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            console.log(
+                "ATS Response:",
+                data
+            );
+
+
+            if (!response.ok || !data.success) {
+
+                message.textContent =
+                    data.message ||
+                    "ATS analysis failed.";
+
+                message.style.color =
+                    "#dc2626";
+
+                return;
+            }
+
+
+            /*
+             * IMPORTANT
+             * Save ATS result
+             */
+
+            sessionStorage.setItem(
+                "atsResult",
+                JSON.stringify(data)
+            );
+
+
+            /*
+             * Go directly to ATS result page
+             */
+
+            window.location.href =
+                "ats-result.html";
+
+        }
+
+
+        catch (error) {
+
+            console.error(
+                "ATS Error:",
+                error
+            );
+
+
+            message.textContent =
+                "❌ Unable to connect to backend. Make sure Flask is running.";
+
+            message.style.color =
+                "#dc2626";
+
+        }
+
+
+        finally {
+
+            button.disabled = false;
+
+            button.textContent =
+                "🔍 Analyze Resume";
+
+        }
+
+    }
+
+</script>   
+
+
+</body>
+
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResumeAI - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="auth-container">
+
+    <div class="welcome">
+        <h1>ResumeAI</h1>
+        <p>
+            Analyze, manage and improve your resume
+            from one simple platform.
+        </p>
+        <div class="big-icon">📄</div>
+    </div>
+
+    <div class="auth-box">
+
+        <!-- LOGIN -->
+
+        <div id="loginForm">
+
+            <h2>Welcome Back</h2>
+            <p class="sub">Login to your account</p>
+
+            <form onsubmit="loginUser(event)">
+
+                <label>Email Address</label>
+
+                <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="Enter your email"
+                    required
+                >
+
+                <small id="loginEmailError"></small>
+
+
+                <label>Password</label>
+
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="Enter your password"
+                    required
+                >
+                <a href="forgot-password.html" class="forgot-link">
+    Forgot Password?
+</a>
+
+                <small id="loginPasswordError"></small>
+                
+
+                <button type="submit">
+                    Login
+                </button>
+
+            </form>
+
+            <p class="switch">
+                Don't have an account?
+
+                <span onclick="showRegister()">
+                    Register
+                </span>
+            </p>
+
+            <p id="loginMessage"></p>
+
+        </div>
+
+
+        <!-- REGISTER -->
+
+        <div id="registerForm" class="hidden">
+
+            <h2>Create Account</h2>
+            <p class="sub">Register your account</p>
+
+            <form onsubmit="registerUser(event)">
+
+                <label>Full Name</label>
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Enter your name"
+                    required
+                >
+
+                <small id="nameError"></small>
+
+
+                <label>Email Address</label>
+
+                <input
+                    type="email"
+                    id="registerEmail"
+                    placeholder="Enter your email"
+                    required
+                >
+
+                <small id="registerEmailError"></small>
+
+
+                <label>Password</label>
+
+                <input
+                    type="password"
+                    id="registerPassword"
+                    placeholder="Create password"
+                    required
+                >
+
+                <small id="passwordError"></small>
+
+
+                <label>Confirm Password</label>
+
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="Confirm password"
+                    required
+                >
+
+                <small id="confirmPasswordError"></small>
+
+
+                <button type="submit">
+                    Register
+                </button>
+
+            </form>
+
+            <p class="switch">
+                Already have an account?
+
+                <span onclick="showLogin()">
+                    Login
+                </span>
+            </p>
+
+            <p id="registerMessage"></p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function showRegister() {
+
+    document.getElementById("loginForm")
+        .classList.add("hidden");
+
+    document.getElementById("registerForm")
+        .classList.remove("hidden");
+
+}
+
+
+function showLogin() {
+
+    document.getElementById("registerForm")
+        .classList.add("hidden");
+
+    document.getElementById("loginForm")
+        .classList.remove("hidden");
+
+}
+
+
+/* REGISTER */
+
+function registerUser(event) {
+
+    event.preventDefault();
+
+    const name =
+        document.getElementById("name").value.trim();
+
+    const email =
+        document.getElementById("registerEmail")
+        .value.trim();
+
+    const password =
+        document.getElementById("registerPassword").value;
+
+    const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+
+    let valid = true;
+
+
+    document.querySelectorAll("small")
+        .forEach(x => x.textContent = "");
+
+
+    if (name === "") {
+
+        document.getElementById("nameError")
+            .textContent = "Name is required";
+
+        valid = false;
+    }
+
+
+    const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+    if (!emailPattern.test(email)) {
+
+        document.getElementById("registerEmailError")
+            .textContent = "Enter a valid email";
+
+        valid = false;
+    }
+
+
+    if (password.length < 8) {
+
+        document.getElementById("passwordError")
+            .textContent =
+            "Password must contain at least 8 characters";
+
+        valid = false;
+
+    } else if (
+        !/[A-Z]/.test(password) ||
+        !/[a-z]/.test(password) ||
+        !/[0-9]/.test(password)
+    ) {
+
+        document.getElementById("passwordError")
+            .textContent =
+            "Use uppercase, lowercase and number";
+
+        valid = false;
+    }
+
+
+    if (password !== confirmPassword) {
+
+        document.getElementById("confirmPasswordError")
+            .textContent =
+            "Passwords do not match";
+
+        valid = false;
+    }
+
+
+    if (!valid) return;
+
+
+    /* SAVE USER - DEMO ONLY */
+
+    localStorage.setItem(
+        "registeredName",
+        name
+    );
+
+    localStorage.setItem(
+        "registeredEmail",
+        email
+    );
+
+    localStorage.setItem(
+        "registeredPassword",
+        password
+    );
+
+
+    document.getElementById("registerMessage")
+        .textContent =
+        "Registration successful! Please login.";
+
+    document.getElementById("registerMessage")
+        .className = "success";
+
+
+    setTimeout(() => {
+
+        showLogin();
+
+        document.getElementById("loginEmail")
+            .value = email;
+
+    }, 1000);
+
+}
+
+
+/* LOGIN */
+
+function loginUser(event) {
+
+    event.preventDefault();
+
+
+    const email =
+        document.getElementById("loginEmail")
+        .value.trim();
+
+    const password =
+        document.getElementById("loginPassword")
+        .value;
+
+
+    const registeredEmail =
+        localStorage.getItem("registeredEmail");
+
+    const registeredPassword =
+        localStorage.getItem("registeredPassword");
+
+
+    document.getElementById("loginEmailError")
+        .textContent = "";
+
+    document.getElementById("loginPasswordError")
+        .textContent = "";
+
+    document.getElementById("loginMessage")
+        .textContent = "";
+
+
+    if (
+        email === registeredEmail &&
+        password === registeredPassword
+    ) {
+
+        localStorage.setItem(
+            "isLoggedIn",
+            "true"
+        );
+
+        localStorage.setItem(
+            "userEmail",
+            email
+        );
+
+
+        window.location.href =
+            "../resume-dashboard/dashboard.html";
+
+    }
+
+    else {
+
+        document.getElementById("loginMessage")
+            .textContent =
+            "Invalid email or password";
+
+        document.getElementById("loginMessage")
+            .className = "error";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ATS Resume Analysis</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2ff,
+                    #f8fafc
+                );
+
+            min-height: 100vh;
+
+            padding: 30px;
+
+            color: #1e293b;
+        }
+
+
+        .container {
+
+            max-width: 1100px;
+
+            margin: auto;
+        }
+
+
+        .topbar {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+
+        .topbar h1 {
+
+            font-size: 30px;
+
+            color: #1e3a8a;
+        }
+
+
+        .back-btn {
+
+            text-decoration: none;
+
+            background: #1d4ed8;
+
+            color: white;
+
+            padding: 10px 18px;
+
+            border-radius: 8px;
+
+            transition: 0.2s;
+        }
+
+
+        .back-btn:hover {
+
+            background: #1e40af;
+        }
+
+
+        .card {
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 10px 30px
+                rgba(0,0,0,0.08);
+
+            margin-bottom: 25px;
+        }
+
+
+        .score-section {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            margin: 30px 0;
+        }
+
+
+        .score-circle {
+
+            width: 200px;
+
+            height: 200px;
+
+            border-radius: 50%;
+
+            background:
+                conic-gradient(
+                    #2563eb var(--score, 0%),
+                    #e2e8f0 0
+                );
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+        }
+
+
+        .score-inner {
+
+            width: 150px;
+
+            height: 150px;
+
+            background: white;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            align-items: center;
+        }
+
+
+        .score {
+
+            font-size: 42px;
+
+            font-weight: bold;
+
+            color: #1d4ed8;
+        }
+
+
+        .status {
+
+            margin-top: 8px;
+
+            color: #64748b;
+
+            font-size: 18px;
+        }
+
+
+        .role {
+
+            text-align: center;
+
+            color: #1e3a8a;
+
+            margin-top: 10px;
+        }
+
+
+        .grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 20px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .skill-box {
+
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.06);
+        }
+
+
+        .skill-box h2 {
+
+            margin-bottom: 15px;
+        }
+
+
+        .skills {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 8px;
+        }
+
+
+        .skill {
+
+            padding: 8px 13px;
+
+            border-radius: 20px;
+
+            font-size: 13px;
+
+            font-weight: 500;
+        }
+
+
+        .matched {
+
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+
+        .missing {
+
+            background: #fee2e2;
+
+            color: #991b1b;
+        }
+
+
+        .analysis-list {
+
+            list-style: none;
+
+            margin-top: 15px;
+        }
+
+
+        .analysis-list li {
+
+            padding: 10px;
+
+            border-bottom:
+                1px solid #e2e8f0;
+
+            font-size: 16px;
+        }
+
+
+        .suggestion {
+
+            background: #eff6ff;
+
+            color: #1e40af;
+
+            padding: 13px;
+
+            margin-top: 10px;
+
+            border-radius: 8px;
+        }
+
+
+        .button-area {
+
+            display: flex;
+
+            gap: 15px;
+
+            margin-top: 20px;
+        }
+
+
+        .btn {
+
+            flex: 1;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 16px;
+
+            cursor: pointer;
+
+            text-decoration: none;
+
+            text-align: center;
+        }
+
+
+        .btn:hover {
+
+            background: #1d4ed8;
+        }
+
+
+        .empty {
+
+            text-align: center;
+
+            padding: 60px 20px;
+        }
+
+
+        .empty h2 {
+
+            margin-bottom: 15px;
+
+            color: #1e3a8a;
+        }
+
+
+        .empty p {
+
+            color: #64748b;
+
+            margin-bottom: 20px;
+        }
+
+
+        @media (max-width: 700px) {
+
+            body {
+
+                padding: 15px;
+            }
+
+
+            .grid {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .topbar {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+
+            .button-area {
+
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- TOP BAR -->
+
+    <div class="topbar">
+
+        <h1>
+            📊 ATS Resume Analysis
+        </h1>
+
+
+        <a
+            href="dashboard.html"
+            class="back-btn"
+        >
+            ← Dashboard
+        </a>
+
+    </div>
+
+
+
+    <!-- RESULT -->
+
+    <div id="result">
+
+
+        <!-- SCORE -->
+
+        <div class="card">
+
+            <h2>
+                ATS Score
+            </h2>
+
+
+            <div class="score-section">
+
+                <div
+                    class="score-circle"
+                    id="scoreCircle"
+                >
+
+                    <div class="score-inner">
+
+                        <div
+                            class="score"
+                            id="score"
+                        >
+                            0
+                        </div>
+
+
+                        <div
+                            class="status"
+                            id="status"
+                        >
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <h2
+                class="role"
+                id="roleResult"
+            >
+            </h2>
+
+        </div>
+
+
+
+        <!-- SKILLS -->
+
+        <div class="grid">
+
+
+            <div class="skill-box">
+
+                <h2>
+                    ✅ Matched Skills
+                </h2>
+
+
+                <div
+                    class="skills"
+                    id="matchedSkills"
+                >
+                </div>
+
+            </div>
+
+
+
+            <div class="skill-box">
+
+                <h2>
+                    ❌ Missing Skills
+                </h2>
+
+
+                <div
+                    class="skills"
+                    id="missingSkills"
+                >
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ANALYSIS -->
+
+        <div class="card">
+
+            <h2>
+                📋 Resume Analysis
+            </h2>
+
+
+            <ul
+                class="analysis-list"
+                id="analysis"
+            >
+            </ul>
+
+        </div>
+
+
+
+        <!-- SUGGESTIONS -->
+
+        <div class="card">
+
+            <h2>
+                💡 Improvement Suggestions
+            </h2>
+
+
+            <div id="suggestions">
+            </div>
+
+        </div>
+
+
+
+        <!-- BUTTONS -->
+
+        <div class="button-area">
+
+            <a
+                href="art.html"
+                class="btn"
+            >
+                ← Analyze Another Resume
+            </a>
+
+
+            <a
+                href="history.html"
+                class="btn"
+            >
+                📜 View History
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- NO RESULT -->
+
+    <div
+        class="card empty"
+        id="noResult"
+        style="display:none;"
+    >
+
+        <h2>
+            No Analysis Found
+        </h2>
+
+
+        <p>
+            Please upload your resume and
+            select a job role first.
+        </p>
+
+
+        <a
+            href="art.html"
+            class="btn"
+        >
+            Upload Resume
+        </a>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+    // Get ATS result from sessionStorage
+
+    const savedData =
+        sessionStorage.getItem("atsResult");
+
+
+    if (!savedData) {
+
+        document.getElementById("result")
+            .style.display = "none";
+
+        document.getElementById("noResult")
+            .style.display = "block";
+
+    }
+
+    else {
+
+        try {
+
+            const data =
+                JSON.parse(savedData);
+
+
+            displayResult(data);
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Result Error:",
+                error
+            );
+
+            document.getElementById("result")
+                .style.display = "none";
+
+            document.getElementById("noResult")
+                .style.display = "block";
+
+        }
+
+    }
+
+
+
+    function displayResult(data) {
+
+
+        // SCORE
+
+        document.getElementById("score")
+            .textContent =
+            data.score + "%";
+
+
+        document.getElementById("status")
+            .textContent =
+            data.status;
+
+
+        document.getElementById("roleResult")
+            .textContent =
+            "Job Role: " + data.job_role;
+
+
+        document.getElementById("scoreCircle")
+            .style.setProperty(
+                "--score",
+                data.score + "%"
+            );
+
+
+
+        // MATCHED SKILLS
+
+        const matched =
+            document.getElementById(
+                "matchedSkills"
+            );
+
+
+        matched.innerHTML = "";
+
+
+        if (
+            data.matched_skills &&
+            data.matched_skills.length > 0
+        ) {
+
+            data.matched_skills.forEach(
+                skill => {
+
+                    const span =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    span.className =
+                        "skill matched";
+
+
+                    span.textContent =
+                        skill;
+
+
+                    matched.appendChild(span);
+
+                }
+            );
+
+        }
+
+        else {
+
+            matched.innerHTML =
+                "<span>No matched skills</span>";
+
+        }
+
+
+
+        // MISSING SKILLS
+
+        const missing =
+            document.getElementById(
+                "missingSkills"
+            );
+
+
+        missing.innerHTML = "";
+
+
+        if (
+            data.missing_skills &&
+            data.missing_skills.length > 0
+        ) {
+
+            data.missing_skills.forEach(
+                skill => {
+
+                    const span =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    span.className =
+                        "skill missing";
+
+
+                    span.textContent =
+                        skill;
+
+
+                    missing.appendChild(span);
+
+                }
+            );
+
+        }
+
+        else {
+
+            missing.innerHTML =
+                "<span>No missing skills 🎉</span>";
+
+        }
+
+
+
+        // RESUME ANALYSIS
+
+        const analysis =
+            document.getElementById(
+                "analysis"
+            );
+
+
+        analysis.innerHTML = "";
+
+
+        if (data.sections) {
+
+            Object.entries(
+                data.sections
+            ).forEach(
+                ([section, found]) => {
+
+                    const li =
+                        document.createElement(
+                            "li"
+                        );
+
+
+                    li.textContent =
+                        section.toUpperCase()
+                        + ": "
+                        + (
+                            found
+                            ? "✅ Found"
+                            : "❌ Missing"
+                        );
+
+
+                    analysis.appendChild(li);
+
+                }
+            );
+
+        }
+
+
+
+        // EMAIL
+
+        const email =
+            document.createElement("li");
+
+
+        email.textContent =
+            "Email: "
+            + (
+                data.email_found
+                ? "✅ Found"
+                : "❌ Not Found"
+            );
+
+
+        analysis.appendChild(email);
+
+
+
+        // PHONE
+
+        const phone =
+            document.createElement("li");
+
+
+        phone.textContent =
+            "Phone: "
+            + (
+                data.phone_found
+                ? "✅ Found"
+                : "❌ Not Found"
+            );
+
+
+        analysis.appendChild(phone);
+
+
+
+        // SUGGESTIONS
+
+        const suggestions =
+            document.getElementById(
+                "suggestions"
+            );
+
+
+        suggestions.innerHTML = "";
+
+
+        if (
+            data.suggestions &&
+            data.suggestions.length > 0
+        ) {
+
+            data.suggestions.forEach(
+                suggestion => {
+
+                    const div =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    div.className =
+                        "suggestion";
+
+
+                    div.textContent =
+                        "💡 " + suggestion;
+
+
+                    suggestions.appendChild(div);
+
+                }
+            );
+
+        }
+
+        else {
+
+            suggestions.innerHTML =
+                "<div class='suggestion'>🎉 Your resume looks good!</div>";
+
+        }
+
+    }
+
+</script>
+
+
+</body>
+
+</html>
